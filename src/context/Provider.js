@@ -1,59 +1,78 @@
 // src/context/Provider.js
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import CarsContext from './CarsContext';
 
-class Provider extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cars: {
-        red: false,
-        blue: false,
-        yellow: false,
-      },
-      signal: {
-        color: 'red',
-      },
-    }
-    this.moveCar = this.moveCar.bind(this);
-    this.changeSignal = this.changeSignal.bind(this);
-  }
+function Provider({ children }) {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     cars: {
+  //       red: false,
+  //       blue: false,
+  //       yellow: false,
+  //     },
+  //     signal: {
+  //       color: 'red',
+  //     },
+  //   }
+  //   this.moveCar = this.moveCar.bind(this);
+  //   this.changeSignal = this.changeSignal.bind(this);
+  // }
+  const [ state, setState ] = useState({
+        cars: {
+          redCar: false,
+          blueCar: false,
+          yellowCar: false,
+        },
+        signal: {
+          color: 'red',
+        },
+      })
 
-  moveCar(car, side) {
-    this.setState({
+  const moveCar = (car, side) => {
+    // this.setState({
+    //   cars: {
+    //     ...this.state.cars,
+    //     [car]: side,
+    //   },
+    // });
+    setState({
+      ...state,
       cars: {
-        ...this.state.cars,
-        [car]: side,
-      },
-    });
+        ...state.cars,
+        [car]: side
+      }
+    })
   };
 
-  changeSignal(signalColor) {
-    this.setState({
+  const changeSignal = (signalColor) => {
+    // this.setState({
+    //   signal: {
+    //     ...this.state.signal,
+    //     color: signalColor,
+    //   },
+    // });
+    setState({
+      ...state,
       signal: {
-        ...this.state.signal,
         color: signalColor,
-      },
-    });
+      }
+    })
   };
 
-  render() {
-    const context = {
-      ...this.state,
-      moveCar: this.moveCar,
-      changeSignal: this.changeSignal,
-    };
+  const context = {
+    ...state,
+    moveCar: moveCar,
+    changeSignal: changeSignal,
+  };
 
-    const { children } = this.props;
-
-    return (
-      <CarsContext.Provider value={context}>
-        {children}
-      </CarsContext.Provider>
-    );
-  }
+  return (
+    <CarsContext.Provider value={context}>
+      {children}
+    </CarsContext.Provider>
+  );
 };
 
 Provider.propTypes = {
